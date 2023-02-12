@@ -3,16 +3,10 @@ package common
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	"main.go/model"
 )
 
 var db *gorm.DB
-
-type User struct {
-	gorm.Model
-	Username string `gorm:"type:varchar(20);not null"`
-	Email    string `gorm:"type:varchar(20);not null"`
-	Password string `gorm:"type:varchar(20);not null"`
-}
 
 func InitDB() *gorm.DB {
 	driverName := "mysql"
@@ -33,7 +27,7 @@ func InitDB() *gorm.DB {
 	if err != nil {
 		panic("failed to connect database, err " + err.Error())
 	}
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&model.User{})
 	return db
 }
 
