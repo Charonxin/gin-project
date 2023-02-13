@@ -58,7 +58,34 @@ func Register(ctx *gin.Context) {
 		return
 	}
 	response.Success(ctx, gin.H{"token": token}, "注册成功")
+}
 
+func Login(ctx *gin.Context) {
+	DB := common.GetDB()
+	// 解析传参
+	var requestUser = model.User{}
+	ctx.BindJSON(&requestUser)
+
+	// 数据验证
+	var user model.User
+	DB.Where("email = ?", requestUser.Email).First(&user)
+	if user.ID == 0 {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "用户不存在"})
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(requestUser.Password)); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "msg": "密码错误"})
+		return
+	}
+
+	token, err := common.ReleaseToken(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
+		log.Println("token generate error" + err.Error())
+		return
+	}
+	response.Success(ctx, gin.H{"token": token}, "成功登录")
 }
 
 func isUsernameExist(db *gorm.DB, username string) bool {

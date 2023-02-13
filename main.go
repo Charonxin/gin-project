@@ -14,6 +14,7 @@ func main() {
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
-	r.POST("/register1", controller.Register)
+	r.POST("/register1/register", controller.Register)
+	r.POST("/register1/login", controller.Login)
 	panic(r.Run("localhost:8082"))
 }
