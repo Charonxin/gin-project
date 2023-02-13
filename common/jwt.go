@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var jwtKey = []byte("a_secret_crect")
+var jwtKey = []byte("gin_project")
 
 type Claims struct {
 	UserId uint
@@ -24,7 +24,7 @@ func ReleaseToken(user model.User) (string, error) {
 			Subject:   "user token",
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
 		return "", err

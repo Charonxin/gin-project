@@ -6,7 +6,7 @@ import (
 	"main.go/model"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 func InitDB() *gorm.DB {
 	driverName := "mysql"
@@ -28,9 +28,10 @@ func InitDB() *gorm.DB {
 		panic("failed to connect database, err " + err.Error())
 	}
 	db.AutoMigrate(&model.User{})
+	DB = db
 	return db
 }
 
 func GetDB() *gorm.DB {
-	return db
+	return DB
 }

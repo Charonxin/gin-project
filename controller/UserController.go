@@ -50,6 +50,14 @@ func Register(ctx *gin.Context) {
 	DB.Create(&newUser)
 
 	// 发放token
+	token, err := common.ReleaseToken(newUser)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
+		//response.Fail(ctx,"系统异常",gin.H{"code":500})
+		log.Println("error" + err.Error())
+		return
+	}
+	response.Success(ctx, gin.H{"token": token}, "注册成功")
 
 }
 

@@ -22,7 +22,7 @@ type register struct {
 	Confirm  string `json:"confirm"`
 }
 
-func isExistUsername(db *gorm.DB, username string, email string) bool {
+func IsExistUsername(db *gorm.DB, username string, email string) bool {
 	var user User
 	db.Where("username = ?", username).First(&user)
 	if user.ID != 0 {
@@ -45,7 +45,7 @@ func Regis(context *gin.Context) {
 	}
 	log.Println(register)
 
-	if isExistUsername(db, register.Username, register.Email) {
+	if IsExistUsername(db, register.Username, register.Email) {
 		context.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "用户已存在"})
 		return
 	}
